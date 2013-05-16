@@ -21,6 +21,11 @@
       });
       return resp;
     },
+    composedUrl: function(bare, enableCaching, queryAppends) {
+      return Backbone.Model.prototype.composedUrl.call(
+        this, bare, true, queryAppends
+      );
+    },
     which: "FileItemVersionsCollection"
   });
 

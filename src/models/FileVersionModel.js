@@ -37,7 +37,8 @@
       if (bare) {
         urlHead = urlHead.split("?")[0];
       }
-      return (urlHead || "") + (urlTail || "");
+      var result = (urlHead || "") + (urlTail || "");
+      return result;
     }
   });
 

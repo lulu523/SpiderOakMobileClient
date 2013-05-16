@@ -112,7 +112,7 @@ describe('Application setup', function() {
          function() {
            this.model.set("url", "model.get('url')");
            this.model.collection.urlBase = "collection.urlBase/";
-           this.model.composedUrl().should.equal(
+           this.model.composedUrl(undefined,true).should.equal(
              "collection.urlBase/model.get('url')"
            );
          });
@@ -120,7 +120,7 @@ describe('Application setup', function() {
          function() {
            this.model.url = "model.url";
            this.model.collection.urlBase = "collection.urlBase/";
-           this.model.composedUrl().should.equal(
+           this.model.composedUrl(undefined,true).should.equal(
              "collection.urlBase/"
            );
          });
@@ -129,7 +129,7 @@ describe('Application setup', function() {
            this.model.url = "model.url";
            this.model.set("url", "model.get('url')");
            this.model.collection.urlBase = "collection.urlBase/";
-           this.model.composedUrl().should.equal(
+           this.model.composedUrl(undefined,true).should.equal(
              "collection.urlBase/model.get('url')"
            );
          });
@@ -138,7 +138,7 @@ describe('Application setup', function() {
            this.model.set("url", "model.get('url')");
            this.model.urlBase = "model.urlBase/";
            this.model.collection.urlBase = "collection.urlBase/";
-           this.model.composedUrl().should.equal(
+           this.model.composedUrl(undefined,true).should.equal(
              "model.urlBase/model.get('url')"
            );
          });
@@ -147,7 +147,7 @@ describe('Application setup', function() {
            this.model.set("url", "model.get('url')");
            this.model.urlBase = "model.urlBase/";
            this.model.set("urlBase", "model.get('urlBase')/");
-           this.model.composedUrl().should.equal(
+           this.model.composedUrl(undefined,true).should.equal(
              "model.get('urlBase')/model.get('url')"
            );
          });
@@ -158,7 +158,7 @@ describe('Application setup', function() {
            this.model.urlBase = "model.urlBase/";
            this.model.set("urlBase", "model.get('urlBase')/");
            this.model.collection.urlBase = "collection.urlBase/";
-           this.model.composedUrl().should.equal(
+           this.model.composedUrl(undefined,true).should.equal(
              "model.get('urlBase')/model.get('url')"
            );
          });
@@ -167,7 +167,7 @@ describe('Application setup', function() {
            this.model.set("url", "model.get('url')");
            this.model.urlBase = "model.urlBase/";
            this.model.collection.urlBase = "collection.urlBase/";
-           this.model.composedUrl().should.equal(
+           this.model.composedUrl(undefined,true).should.equal(
              "model.urlBase/model.get('url')"
            );
          });
@@ -176,7 +176,7 @@ describe('Application setup', function() {
            this.model.set("url", "model.get('url')");
            this.model.collection.urlBase =
                function () { return "collection.urlBase()/"; };
-           this.model.composedUrl().should.equal(
+           this.model.composedUrl(undefined,true).should.equal(
              "collection.urlBase()/model.get('url')"
            );
          });
@@ -185,8 +185,50 @@ describe('Application setup', function() {
            this.model.set("url", function () { return "model.get('url')()"; });
            this.model.collection.urlBase =
               function () { return "collection.urlBase()/"; };
-           this.model.composedUrl().should.equal(
+           this.model.composedUrl(undefined,true).should.equal(
              "collection.urlBase()/model.get('url')()"
+           );
+         });
+      it("should append caching stuff to the if we don't inhibit it",
+         function() {
+           this.model.set("url", "b");
+           this.model.collection.urlBase = "a,";
+           this.model.composedUrl().should.match(
+                 /a,b\?cachefodder=[0-9]+$/
+           );
+         });
+      it("should properly append caching stuff to integral query string",
+         function() {
+           this.model.set("url", "b?integral=true");
+           this.model.collection.urlBase = "a,";
+           this.model.composedUrl().should.match(
+                 /a,b\?integral=true&cachefodder=[0-9]+$/
+           );
+         });
+      it("should append query params if we provide them",
+         function() {
+           this.model.set("url", "b");
+           this.model.collection.urlBase = "a,";
+           this.model.composedUrl(null, true, "x=y&z=a").should.match(
+                 /a,b\?x=y&z=a$/
+           );
+         });
+      it("should properly append query params and cache inhibition" +
+         " to integral query",
+         function() {
+           this.model.set("url", "b?integral=true");
+           this.model.collection.urlBase = "a,";
+           this.model.composedUrl(null, null, "x=y").should.match(
+                 /a,b\?integral=true&x=y&cachefodder=[0-9]+$/
+           );
+         });
+      it("should remove integral query if 'bare', but still include caching" +
+         " and query params",
+         function() {
+           this.model.set("url", "b?integral=true");
+           this.model.collection.urlBase = "a,";
+           this.model.composedUrl(true, null, "x=y").should.match(
+                 /a,b\?x=y&cachefodder=[0-9]+$/
            );
          });
     });

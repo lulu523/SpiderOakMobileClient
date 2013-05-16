@@ -32,9 +32,10 @@
                 this.get("room_key")));
       }
     },
-    composedUrl: function(bare) {
-      var base = Backbone.Model.prototype.composedUrl.call(this);
-      return base + (bare ? "" : "?auth_required_format=json");
+    composedUrl: function(bare, enableCaching, queryAppends) {
+      return Backbone.Model.prototype.composedUrl.call(
+        this, bare, enableCaching, (bare ? null : "auth_required_format=json")
+      );
     },
     /** Transiently include tailored authentication if we have a password */
     sync: function () {

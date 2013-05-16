@@ -345,17 +345,22 @@
    * - The url part is taken from the model's .get("url").
    *
    * @this{model}
-   # @param {boolen} bare - when set, strip any query string
+   * @param {boolen} bare - when set, strip any intrinsic query string.
+   * @param {boolen} enableCaching - when set, don't include cache-inhibition.
+   * @param {boolen} queryAppends - when set, add as query parameters.
    */
-  Backbone.Model.prototype.composedUrl = function(bare) {
+  Backbone.Model.prototype.composedUrl = function(bare,
+                                                  enableCaching,
+                                                  queryAppends) {
     var urlTail = this.get("url");
     var collection = this.collection;
     var urlHead = this.get("urlBase") || this.urlBase;
     var urlHeadObject = urlHead && this;
+    var result, jitter, appendchar;
     if (! urlHead && collection) {
       urlHead = (collection.get("urlBase") ||
                   collection.urlBase ||
-                  collection.url ||
+                   collection.url ||
                   "");
       urlHeadObject = urlHead && collection;
     }
@@ -369,7 +374,16 @@
       urlHead = urlHead && urlHead.split("?")[0];
       urlTail = urlTail && urlTail.split("?")[0];
     }
-    var result = (urlHead || "") + (urlTail || "");
+    result = (urlHead || "") + (urlTail || "");
+    if (queryAppends) {
+      appendchar = (result.indexOf("?") === -1) ? "?" : "&";
+      result += appendchar + queryAppends;
+    }
+    if (! enableCaching) {
+      jitter = "cachefodder=" + (new Date()).getTime();
+      appendchar = (result.indexOf("?") === -1) ? "?" : "&";
+      result += appendchar + jitter;
+    }
     return result;
   };
 
