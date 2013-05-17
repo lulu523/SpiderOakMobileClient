@@ -816,8 +816,8 @@
       if (this.model.get("versions") > 1) {
         this.$(".versions").show();
         this.versionsCollection = new spiderOakApp.FileItemVersionsCollection();
-        this.versionsCollection.url = this.model.composedUrl(true) +
-            "?format=version_info";
+        this.versionsCollection.url = this.model.composedUrl(
+          true, true, "format=version_info");
         this.versionsCollection.setPassword(this.model.getPassword());
         this.versionsView = new spiderOakApp.FileItemVersionsListView({
           collection: this.versionsCollection
