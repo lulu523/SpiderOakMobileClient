@@ -58,3 +58,46 @@ body {
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
 }
+
+ul li.sep {
+  font-size: 80%;
+  padding: 2px 10px;
+  background-color: #666;
+  color: white;
+  border: none;
+}
+
+.menu {
+  padding: 0 10px;
+  width: 250px;
+}
+
+.menu ul li {
+  /*padding-top: 20px;*/
+  background-color: #333;
+  border-color: #ccc;
+  color: #fff;
+}
+
+.menu ul li.current {
+  /*border-left: 5px solid orange;
+  margin-left: -5px;*/
+}
+
+.menu ul li.sep {
+  padding: 2px 10px;
+  background-color: #333;
+  border-bottom: 2px solid #666;
+  color: #ccc;
+}
+
+.menu ul li a {
+  color: #fff;
+}
+
+.menu ul li a.active {
+  background-color: #ccc;
+  color: #000;
+}
+
+
